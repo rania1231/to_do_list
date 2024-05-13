@@ -25,12 +25,44 @@ class FirestoreService{
     'createdAt':task.getCreatedAt
     });
 
-
-
   }
 
+  // Delete task method
+  Future<void> deleteTask(String taskId) async {
+    await _db
+        .collection('users')
+        .doc(_userId)
+        .collection('tasks')
+        .doc(taskId)
+        .delete();
+  }
 
+  // Update task method
+  Future<void> updateTask(Tache task) async {
+    await _db
+        .collection('users')
+        .doc(_userId)
+        .collection('tasks')
+        .doc(task.getId)
+        .update({
+      'title': task.getTitle,
+      'description': task.getDescription,
+      'completed': task.isCompleted,
+      'categorie': task.getCategoryId,
+    });
+  }
 
+  // View tasks method (stream for live updates)
+  Stream<List<Tache>> getTasks() {
+    return _db
+        .collection('users')
+        .doc(_userId)
+        .collection('tasks')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Tache.fromFirestore(doc.data()!)).toList();
+    });
+  }
 
   Future<void> addUser(UserCredential userCredential,String userName,String email,String pass) {
     CollectionReference users = _db.collection('users');

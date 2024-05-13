@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Tache {
   String? id;
   String title;
   String? description;
   bool completed;
   String categoryId;
-  DateTime createdAt;
+  Timestamp createdAt;
 // Getters
   String get getId => id ?? ""; // Use null-safe operator for optional id
 
@@ -16,7 +18,7 @@ class Tache {
 
   String get getCategoryId => categoryId;
 
-  DateTime get getCreatedAt => createdAt;
+  Timestamp get getCreatedAt => createdAt;
 
 
 
@@ -41,7 +43,7 @@ class Tache {
     categoryId = value;
   }
 
-  set setCreatedAt(DateTime value) {
+  set setCreatedAt(Timestamp value) {
     createdAt = value;
   }
   Tache({
@@ -53,7 +55,14 @@ class Tache {
     required this.createdAt,
   });
 
-
+  factory Tache.fromFirestore(Map<String, dynamic> data) => Tache(
+    title: data['title'] as String,
+    description: data['description'] as String,
+    completed: data['completed'] as bool,
+    categoryId: data['categorie'] as String,
+    createdAt: data['createdAt'] as Timestamp,
+    id: data['id'] as String,
+  );
 
 
 

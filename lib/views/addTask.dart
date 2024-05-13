@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/classes/FirestoreService.dart';
 
+import '../classes/DataClass.dart';
 import '../classes/task.dart';
 
 
@@ -117,8 +120,9 @@ class _AddTaskState extends State<AddTask> {
       ),
       floatingActionButton:FloatingActionButton(
         onPressed: ()async{
-          Tache task=Tache(id:"",title:  taskName.text, completed: false,description: "",createdAt: DateTime.now(),categoryId:dropdownValue );
-          firestoreService.addTask(task );
+          Tache task=Tache(id:"",title:  taskName.text, completed: false,description: "",createdAt: Timestamp.now(),categoryId:dropdownValue );
+          context.read<DataClass>().addTask(task);
+
         },
         child: Icon(CupertinoIcons.check_mark),
       ) ,
