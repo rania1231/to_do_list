@@ -1,5 +1,9 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_list/classes/FirestoreService.dart';
+
+import '../classes/task.dart';
 
 
 
@@ -11,6 +15,7 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  FirestoreService firestoreService=FirestoreService();
   TextEditingController taskName=TextEditingController();
   TextEditingController taskDate=TextEditingController();
   List<String> categories=['Default','Urgent'];
@@ -111,7 +116,10 @@ class _AddTaskState extends State<AddTask> {
         ),
       ),
       floatingActionButton:FloatingActionButton(
-        onPressed: (){},
+        onPressed: ()async{
+          Tache task=Tache(id:"",title:  taskName.text, completed: false,description: "",createdAt: DateTime.now(),categoryId:dropdownValue );
+          firestoreService.addTask(task );
+        },
         child: Icon(CupertinoIcons.check_mark),
       ) ,
     );

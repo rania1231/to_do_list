@@ -1,16 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:to_do_list/classes/task.dart';
 
 import '../views/home.dart';
 
 class FirestoreService{
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  late final String _userId;
+  FirestoreService(){
+    _userId=FirebaseAuth.instance.currentUser!.uid;
+  }
 
 
-  Future<void>addTask(Task task)async{
+  Future<void>addTask(Tache task)async{
     //generate a unique id
-    final String id=_db.collection('tasks').doc().id;
+    final docRef=_db.collection('users').doc(_userId).collection('tasks').doc();
+    task.setId((docRef.id).toString());
+    await docRef.set({
+    'title':task.getTitle,
+    'description':task.getDescription,
+    'completed':task.isCompleted,
+    'categorie':task.getCategoryId ,
+    'createdAt':task.getCreatedAt
+    });
+
+
+
   }
 
 
