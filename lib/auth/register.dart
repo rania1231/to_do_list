@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_list/auth/login.dart';
+import 'package:to_do_list/classes/FirestoreService.dart';
 
 import '../views/home.dart';
 import 'auth_methods.dart';
@@ -128,7 +129,10 @@ class _RegisterState extends State<Register> {
                     ),
 
                     Container(height: 40,),
-                    ElevatedButton(onPressed: signUp, child: Text('Register'))
+                    ElevatedButton(onPressed: ()async{
+                      await signUp();
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+                    }, child: Text('Register'))
                   ]),
             )
           ],
@@ -139,17 +143,13 @@ class _RegisterState extends State<Register> {
 
 
   Future<User?>signUp() async {
-    //String userName =name.text;
-    String userEmail=email.text;
-    String userPassword=password.text;
-    User? user=await _auth.signUpWithEmailAndPassword(userEmail, userPassword);
-    if(user!= null){
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
-      print("user created successufully");
-    }
-    else{
-      print("error during creation of User");
-    }
+    final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: email.text,
+    password: password.text,
+  );
+    FirestoreService firestoreService=FirestoreService();
+    await firestoreService.addUser(credential, name.text, email.text, password.text);
+
 
   }
 
