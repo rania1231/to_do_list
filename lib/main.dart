@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_list/auth/login.dart';
 import 'package:to_do_list/auth/splashScreen.dart';
+import 'package:to_do_list/views/addTask.dart';
 
 import 'auth/register.dart';
 
@@ -16,8 +18,10 @@ void main()  async{
         storageBucket: 'todolistproject-a7e04.appspot.com',
       )
   );
+  FirebaseFirestore.instance.settings= const Settings(persistenceEnabled :true,);
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Login(),
+      home: AddTask(),
     );
   }
 }
