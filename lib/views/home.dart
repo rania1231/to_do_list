@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
       //   },
        // child:Icon(Icons.notification_add),
          child:Icon(CupertinoIcons.add),
-        onPressed: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddTask()), (route) => false);},
+        onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddTask()));},
       ) ,
     );
 
