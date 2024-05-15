@@ -130,7 +130,7 @@ class _UpdateTaskState extends State<UpdateTask> {
 
           ),
           ElevatedButton(onPressed:()async{
-            Tache task=Tache(id: widget.task.getId,title:title.text, completed: widget.task.isCompleted, categoryId: currentCategory, createdAt: Timestamp.now(),);
+            Tache task=Tache(id: widget.task.getId,title:title.text, completed: widget.task.isCompleted, categoryId: currentCategory, createdAt: DateTime.now(),);
            await context.read<DataClass>().updateTask(task);
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
           }, child: Text('update'))

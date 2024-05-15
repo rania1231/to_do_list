@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
     );
     super.initState();
   }
+ // late final Function(bool?)?onChanged;
   //final FirestoreService firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
@@ -47,21 +48,41 @@ class _HomePageState extends State<HomePage> {
             return Card(
                 child:Container(
                   padding: const EdgeInsets.all(10),
-                  child:Column(children:[
-                      Text("id:${task.getId}"),
-                      Text("title: ${task.title}"),
-                      Text("Categorie: ${task.categoryId}"),
-                      Text("date: ${(task.createdAt)}"),
-                      Text("completed: ${(task.isCompleted)}"),
-                    IconButton(onPressed: ()async{
-                      print("task id  to be deleted=${task.getId}");
-                     await context.read<DataClass>().deleteTask(task.getId);
-                    }, icon: const Icon(CupertinoIcons.delete)),
-                    IconButton(onPressed: ()async{
-                      print("task id  to be edited=${task.getId}");
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)), (route) => false);
-                    }, icon: const Icon(CupertinoIcons.pen))
-                  ])
+                  child:Row(
+                    children: [
+                      Checkbox(value: task.isCompleted, onChanged: (bool? value)async {
+                        if(task.completed==false){
+                          task.completed=true;
+                          value=true;
+
+                        }
+                        else{
+                          {
+                            task.completed=false;
+                            value=true;
+
+                          }
+                        }
+                        await context.read<DataClass>().updateTask(task);
+                      },
+                      checkColor: Colors.teal,),
+                      Column(children:[
+                          Text("id:${task.getId}"),
+                          Text("title: ${task.title}"),
+                          Text("Categorie: ${task.categoryId}"),
+                          Text("date: ${(task.createdAt)}"),
+                          Text("completed: ${(task.isCompleted)}"),
+                        IconButton(onPressed: ()async{
+                          print("task id  to be deleted=${task.getId}");
+                         await context.read<DataClass>().deleteTask(task.getId);
+                        }, icon: const Icon(CupertinoIcons.delete)),
+                        IconButton(onPressed: ()async{
+                          print("task id  to be edited=${task.getId}");
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)), (route) => false);
+                        }, icon: const Icon(CupertinoIcons.pen))
+                      ]),
+                    ],
+                  )
                 )
             );
             }

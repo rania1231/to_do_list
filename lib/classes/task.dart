@@ -6,7 +6,8 @@ class Tache {
   String? description;
   bool completed;
   String categoryId;
-  Timestamp createdAt;
+  DateTime createdAt;
+
 // Getters
   String get getId => id ?? ""; // Use null-safe operator for optional id
 
@@ -18,7 +19,7 @@ class Tache {
 
   String get getCategoryId => categoryId;
 
-  Timestamp get getCreatedAt => createdAt;
+  DateTime get getCreatedAt => createdAt;
 
 
 
@@ -43,7 +44,7 @@ class Tache {
     categoryId = value;
   }
 
-  set setCreatedAt(Timestamp value) {
+  set setCreatedAt(DateTime value) {
     createdAt = value;
   }
   Tache({
@@ -60,9 +61,12 @@ class Tache {
     description: data['description'] ,
     completed: data['completed'] ,
     categoryId: data['categorie'] ,
-    createdAt: data['createdAt'] ,
+    // Convert Timestamp to DateTime
+    createdAt: (data['createdAt'] as Timestamp).toDate(),
     id: data['id'] ,
   );
+
+
 
 
 
