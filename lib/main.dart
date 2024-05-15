@@ -9,6 +9,8 @@ import 'package:to_do_list/auth/splashScreen.dart';
 import 'package:to_do_list/classes/FirestoreService.dart';
 import 'package:to_do_list/views/addTask.dart';
 import 'package:to_do_list/views/home.dart';
+import 'package:timezone/data/latest.dart' as tz;
+
 
 
 import 'auth/register.dart';
@@ -44,6 +46,7 @@ void main()  async{
   if(!isAllowedToSendNotification){
     AwesomeNotifications().requestPermissionToSendNotifications();
   }
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
@@ -62,7 +65,7 @@ class MyApp extends StatelessWidget {
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
     useMaterial3: true,
     ),
-    home: AddTask(),
+    home: Login(),
     )
     );
   }

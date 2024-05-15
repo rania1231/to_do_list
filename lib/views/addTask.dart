@@ -1,3 +1,7 @@
+import 'dart:async';
+
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +13,8 @@ import 'package:to_do_list/views/home.dart';
 
 import '../classes/DataClass.dart';
 import '../classes/task.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart'as tz;
 
 
 
@@ -25,7 +31,18 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController taskDate=TextEditingController();
   List<String> categories=['Default','Urgent'];
   String dropdownValue = 'Default';
+  late tz.Location localTimeZone;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    tz.initializeTimeZones();
+
+// Get the local time zone
+    localTimeZone = tz.local;
+    print('LocalTimeZone=$localTimeZone');
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,7 +138,50 @@ class _AddTaskState extends State<AddTask> {
             ElevatedButton(onPressed: ()async{
              DateTime? dateTime=await showDatePicker();
              print('dateTime=$dateTime');
-            }, child: Text('get dateTime'))
+            }, child: Text('get dateTime')),
+
+
+      ElevatedButton(
+        onPressed: () async {
+          final localTimeZone = tz.local;
+          DateTime? deadline = await showDatePicker();
+          if (deadline != null) {
+            // Compare the deadline with the current date
+            if (DateTime.now().isAfter(deadline)) {
+              // If the current date is after the deadline, schedule the notification
+              await AwesomeNotifications().createNotification(
+                content: NotificationContent(
+                  id: UniqueKey().hashCode,
+                  channelKey: "basic_channel",
+                  title: "Task Deadline Exceeded",
+                  body: "Your task deadline has been exceeded!",
+                ),
+                schedule: NotificationInterval(
+                  interval: 0,
+                  timeZone: (localTimeZone).toString(),
+                  repeats: false,
+                  preciseAlarm: true,
+                ),
+              );
+
+            } else {
+              // If the current date is before the deadline, set a timer to schedule the notification when the deadline is reached
+              Duration difference = deadline.difference(DateTime.now());
+              Timer(difference, () async {
+                await AwesomeNotifications().createNotification(
+                  content: NotificationContent(
+                    id: UniqueKey().hashCode,
+                    channelKey: "basic_channel",
+                    title: "Task Deadline Exceeded",
+                    body: "Your task deadline has been exceeded!",
+                  ),
+                );
+              });
+            }
+          }
+        },
+        child: Text('Set Deadline'),
+      ),
           ],
         ),
       ),
