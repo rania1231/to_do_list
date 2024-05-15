@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/views/taskDetails.dart';
@@ -6,7 +5,8 @@ import 'package:to_do_list/views/updateTask.dart';
 
 import '../classes/DataClass.dart';
 import '../classes/task.dart';
-
+import 'addTask.dart';
+import 'menu.dart';
 
 class CategoryTasksPage extends StatelessWidget {
   final String category;
@@ -15,8 +15,7 @@ class CategoryTasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Retrieve tasks based on the selected category
-    List<Tache> categoryTasks = Provider.of<DataClass>(context)
+    final tasks = Provider.of<DataClass>(context)
         .tasks
         .where((task) => task.getCategoryId == category)
         .toList();
@@ -24,58 +23,86 @@ class CategoryTasksPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tasks - $category'),
+        backgroundColor: Color(0xFFDEABAF),
+        actions: [
+          Menu(),
+        ],
       ),
-      body: ListView.builder(
-        itemCount: categoryTasks.length,
-        itemBuilder: (context, index) {
-          final task = categoryTasks[index];
-          return Card(
-              child:GestureDetector(
-                onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskDetails(task: task)),);},
-                child: Container(
-                    padding: const EdgeInsets.all(10),
-                    child:Row(
+      body: Container(
+        color: Colors.grey[200],
+        child: ListView.builder(
+          itemCount: tasks.length,
+          itemBuilder: (context, index) {
+            final task = tasks[index];
+            return Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TaskDetails(task: task)),
+                  );
+                },
+                child: Card(
+                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: ListTile(
+                    leading: Checkbox(
+                      value: task.isCompleted,
+                      onChanged: (bool? value) async {
+                        if (task.completed == false) {
+                          task.completed = true;
+                        } else {
+                          task.completed = false;
+                        }
+                        await context.read<DataClass>().updateTask(task);
+                      },
+                      checkColor: Colors.white,
+                      activeColor: Color(0xFFDC98BD),
+                    ),
+                    title: Text(
+                      task.title,
+                      style: TextStyle(
+                        decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+                      ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Checkbox(value: task.isCompleted, onChanged: (bool? value)async {
-                          if(task.completed==false){
-                            task.completed=true;
-                            value=true;
-
-                          }
-                          else{
-                            {
-                              task.completed=false;
-                              value=true;
-
-                            }
-                          }
-                          await context.read<DataClass>().updateTask(task);
-                        },
-                          checkColor: Colors.teal,),
-                        Row(children:[
-
-                          Text(
-                            "title: ${task.title}",
-                            style: TextStyle(
-                              decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
-                            ),
-                          ),
-                          IconButton(onPressed: ()async{
-                            print("task id  to be deleted=${task.getId}");
+                        IconButton(
+                          onPressed: () async {
                             await context.read<DataClass>().deleteTask(task.getId);
-                          }, icon: const Icon(CupertinoIcons.delete)),
-                          IconButton(onPressed: ()async{
-                            print("task id  to be edited=${task.getId}");
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)));
-                          }, icon: const Icon(CupertinoIcons.pen))
-                        ]),
+                          },
+                          icon: Icon(Icons.delete),
+                          color: Color(0xFF211A44),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => UpdateTask(task: task)),
+                            );
+                          },
+                          icon: Icon(Icons.edit),
+                          color: Color(0xFFDEABAF),
+                        ),
                       ],
-                    )
+                    ),
+                  ),
                 ),
-              )
+              ),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddTask()),
           );
-
         },
+        backgroundColor: Color(0xFFDEABAF),
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -1,36 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:popover/popover.dart';
 import 'package:to_do_list/views/taskByCategory.dart';
 
-
 class Menu extends StatelessWidget {
-  const Menu({super.key});
+  const Menu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>showPopover(
-          context: context,
-          bodyBuilder: (context)=>Column(
-            children: [
-              SizedBox(height: 10),
-              buildMenuItem(context, 'Default'),
-              buildMenuItem(context, 'Urgent'),
-              buildMenuItem(context, 'Important'),
-              buildMenuItem(context, 'Sport'),
-              buildMenuItem(context, 'Work'),
-              buildMenuItem(context, 'Study'),
-              buildMenuItem(context, 'Personal'),
-
-            ],
-        ),
-        height: 450,
-        width: 250
-      ),
-      child: Icon(Icons.menu,color: Colors.white,size: 40,),
+      onTap: () => showMenu(context),
+      child: Icon(Icons.menu, color: Colors.white, size: 40),
     );
   }
-  Widget buildMenuItem(BuildContext context, String category) {
+
+  void showMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          padding: EdgeInsets.symmetric(vertical: 20),
+          color: Colors.grey[200],
+          child: Column(
+            children: [
+
+              buildMenuItem(context, 'Default', Color(0xFFE9C8CE)),
+              buildMenuItem(context, 'Urgent', Color(0xFFDEABAF)),
+              buildMenuItem(context, 'Important', Color(0xFFDC98BD)),
+              buildMenuItem(context, 'Sport', Color(0xFFEBE3F5)),
+              buildMenuItem(context, 'Work', Color(0xFFDC98BD)),
+              buildMenuItem(context, 'Study', Color(0xFFDEABAF)),
+              buildMenuItem(context, 'Personal', Color(0xFFE9C8CE)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildMenuItem(BuildContext context, String category, Color color) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -41,12 +48,13 @@ class Menu extends StatelessWidget {
         );
       },
       child: Container(
-        child: Center(child: Text(category)),
-        height: 25,
-        width: 230,
-        decoration: BoxDecoration(color: Colors.grey),
-        // Add styling as needed
-        margin: EdgeInsets.symmetric(vertical: 15),
+        padding: EdgeInsets.symmetric(vertical: 15),
+        width: 320,
+        decoration: BoxDecoration(
+          color: color,
+          border: Border(bottom: BorderSide(color: Colors.grey)),
+        ),
+        child: Center(child: Text(category,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),),),
       ),
     );
   }
