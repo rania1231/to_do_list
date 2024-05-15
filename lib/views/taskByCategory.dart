@@ -31,7 +31,7 @@ class CategoryTasksPage extends StatelessWidget {
           final task = categoryTasks[index];
           return Card(
               child:GestureDetector(
-                onTap: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TaskDetails(task: task)), (route) => false);},
+                onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskDetails(task: task)),);},
                 child: Container(
                     padding: const EdgeInsets.all(10),
                     child:Row(
@@ -66,7 +66,7 @@ class CategoryTasksPage extends StatelessWidget {
                           }, icon: const Icon(CupertinoIcons.delete)),
                           IconButton(onPressed: ()async{
                             print("task id  to be edited=${task.getId}");
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)), (route) => false);
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)));
                           }, icon: const Icon(CupertinoIcons.pen))
                         ]),
                       ],
