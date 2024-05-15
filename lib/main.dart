@@ -10,6 +10,7 @@ import 'package:to_do_list/classes/FirestoreService.dart';
 import 'package:to_do_list/views/addTask.dart';
 import 'package:to_do_list/views/home.dart';
 
+
 import 'auth/register.dart';
 import 'classes/DataClass.dart';
 
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
     useMaterial3: true,
     ),
-    home: Login(),
+    home: AddTask(),
     )
     );
   }

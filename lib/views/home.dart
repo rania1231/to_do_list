@@ -72,19 +72,19 @@ class _HomePageState extends State<HomePage> {
 
     ),
       floatingActionButton:FloatingActionButton(
-        onPressed: () {
-          AwesomeNotifications().createNotification(
-              content: NotificationContent(
-                  id: 1,
-                  channelKey: "basic_channel",
-                title: "Hello Rania",
-                body:"Yey I have local notifications"
-              )
-          );
-        },
-        child:Icon(Icons.notification_add),
-        // child:Icon(CupertinoIcons.add),
-        //onPressed: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddTask()), (route) => false);},
+        // onPressed: () {
+        //   AwesomeNotifications().createNotification(
+        //       content: NotificationContent(
+        //           id: 1,
+        //           channelKey: "basic_channel",
+        //         title: "Hello Rania",
+        //         body:"Yey I have local notifications"
+        //       )
+        //   );
+        // },
+        // child:Icon(Icons.notification_add),
+         child:Icon(CupertinoIcons.add),
+        onPressed: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddTask()), (route) => false);},
       ) ,
     );
 
