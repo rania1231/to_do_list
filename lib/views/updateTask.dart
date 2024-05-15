@@ -8,6 +8,7 @@ import 'package:to_do_list/classes/FirestoreService.dart';
 import 'package:to_do_list/views/home.dart';
 
 import '../classes/task.dart';
+import 'menu.dart';
 
 
 
@@ -24,7 +25,7 @@ class _UpdateTaskState extends State<UpdateTask> {
   FirestoreService firestoreService=FirestoreService();
   TextEditingController title=TextEditingController();
   TextEditingController dueDate=TextEditingController();
-  List<String> categories=['Default','Urgent'];
+  List<String> categories=['Default','Urgent','Important','Sport','Work','Study','Personal'];
  late  DataClass dataClass;
  late String currentCategory;
   late DateTime deadline;
@@ -47,7 +48,13 @@ class _UpdateTaskState extends State<UpdateTask> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: AppBar(title: Text('Update Task')),
+      appBar: AppBar(title:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Update Task'),
+          Menu()
+        ],
+      ),),
       body:Container(
         child: Column(
         children: [

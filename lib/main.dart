@@ -17,6 +17,7 @@ import 'auth/register.dart';
 import 'classes/DataClass.dart';
 
 void main()  async{
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context)=>DataClass(firestoreService: FirestoreService()),
       child:  MaterialApp(
+        debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
     theme: ThemeData(
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

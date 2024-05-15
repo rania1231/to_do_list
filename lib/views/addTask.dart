@@ -16,6 +16,8 @@ import '../classes/task.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart'as tz;
 
+import 'menu.dart';
+
 
 
 class AddTask extends StatefulWidget {
@@ -29,7 +31,7 @@ class _AddTaskState extends State<AddTask> {
   FirestoreService firestoreService=FirestoreService();
   TextEditingController taskName=TextEditingController();
   TextEditingController taskDate=TextEditingController();
-  List<String> categories=['Default','Urgent'];
+  List<String> categories=['Default','Urgent','Important','Sport','Work','Study','Personal'];
   String dropdownValue = 'Default';
   late tz.Location localTimeZone;
   late DateTime deadline;
@@ -49,7 +51,13 @@ class _AddTaskState extends State<AddTask> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('New Task', style: TextStyle(fontWeight: FontWeight.bold),)),
+      appBar:  AppBar(title:  Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('New Task'),
+        Menu()
+      ],
+    ),),
       body: Container(
         child: Column(
           children: [

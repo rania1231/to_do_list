@@ -13,6 +13,7 @@ import '../classes/DataClass.dart';
 import '../classes/FirestoreService.dart';
 import '../classes/notification_controller.dart';
 import '../classes/task.dart';
+import 'menu.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,7 +40,13 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final tasks = Provider.of<DataClass>(context).tasks;
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Page'),),
+      appBar: AppBar(title:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Home Page'),
+          Menu()
+        ],
+      ),),
       body: Consumer<DataClass>(builder :(context, dataClass ,child){
 
           return ListView.builder(
