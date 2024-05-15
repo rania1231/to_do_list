@@ -7,6 +7,7 @@ class Tache {
   bool completed;
   String categoryId;
   DateTime createdAt;
+  DateTime deadline;
 
 // Getters
   String get getId => id ?? ""; // Use null-safe operator for optional id
@@ -20,6 +21,8 @@ class Tache {
   String get getCategoryId => categoryId;
 
   DateTime get getCreatedAt => createdAt;
+
+  DateTime get getDeadline => deadline;
 
 
 
@@ -54,6 +57,7 @@ class Tache {
     required this.completed,
     required this.categoryId,
     required this.createdAt,
+    required this.deadline,
   });
 
   factory Tache.fromFirestore(Map<String, dynamic> data) => Tache(
@@ -63,6 +67,7 @@ class Tache {
     categoryId: data['categorie'] ,
     // Convert Timestamp to DateTime
     createdAt: (data['createdAt'] as Timestamp).toDate(),
+    deadline: (data['deadline'] as Timestamp).toDate(),
     id: data['id'] ,
   );
 

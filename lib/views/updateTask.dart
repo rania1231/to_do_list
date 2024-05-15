@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/classes/DataClass.dart';
 import 'package:to_do_list/classes/FirestoreService.dart';
@@ -26,6 +27,7 @@ class _UpdateTaskState extends State<UpdateTask> {
   List<String> categories=['Default','Urgent'];
  late  DataClass dataClass;
  late String currentCategory;
+  late DateTime deadline;
 
 
 
@@ -36,6 +38,7 @@ class _UpdateTaskState extends State<UpdateTask> {
      dataClass.editCategory(widget.task.getCategoryId);
      currentCategory=widget.task.getCategoryId;
      title.text=widget.task.getTitle;
+     deadline=widget.task.deadline;
 
     // TODO: implement initState
     super.initState();
@@ -122,6 +125,11 @@ class _UpdateTaskState extends State<UpdateTask> {
                   currentCategory=val;
                 });
               } ,),
+              ElevatedButton(onPressed: ()async{
+                DateTime? dateTime=(await  showDatePicker(widget.task.deadline));
+                deadline=dateTime!;
+
+              }, child: Text("Edit Deadline"))
 
 
 
@@ -130,13 +138,55 @@ class _UpdateTaskState extends State<UpdateTask> {
 
           ),
           ElevatedButton(onPressed:()async{
-            Tache task=Tache(id: widget.task.getId,title:title.text, completed: widget.task.isCompleted, categoryId: currentCategory, createdAt: DateTime.now(),);
+            Tache task=Tache(id: widget.task.getId,title:title.text, completed: widget.task.isCompleted, categoryId: currentCategory, createdAt: DateTime.now(),deadline: deadline);
            await context.read<DataClass>().updateTask(task);
+           dataClass.sendNotif(task.deadline, task.completed);
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
           }, child: Text('update'))
         ],
         ),
       ),
+    );
+  }
+  Future<DateTime?> showDatePicker(DateTime dateTime)async {
+    return await showOmniDateTimePicker(
+      context: context,
+      initialDate: dateTime,
+      firstDate:
+      DateTime(1600).subtract(const Duration(days: 3652)),
+      lastDate: DateTime.now().add(
+        const Duration(days: 3652),
+      ),
+      is24HourMode: false,
+      isShowSeconds: false,
+      minutesInterval: 1,
+      secondsInterval: 1,
+      borderRadius: const BorderRadius.all(Radius.circular(16)),
+      constraints: const BoxConstraints(
+        maxWidth: 350,
+        maxHeight: 650,
+      ),
+      transitionBuilder: (context, anim1, anim2, child) {
+        return FadeTransition(
+          opacity: anim1.drive(
+            Tween(
+              begin: 0,
+              end: 1,
+            ),
+          ),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      selectableDayPredicate: (dateTime) {
+        // Disable 25th Feb 2023
+        if (dateTime == DateTime(2023, 2, 25)) {
+          return false;
+        } else {
+          return true;
+        }
+      },
     );
   }
 }

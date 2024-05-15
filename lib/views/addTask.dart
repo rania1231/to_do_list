@@ -32,10 +32,13 @@ class _AddTaskState extends State<AddTask> {
   List<String> categories=['Default','Urgent'];
   String dropdownValue = 'Default';
   late tz.Location localTimeZone;
+  late DateTime deadline;
+  late  DataClass dataClass;
 
   @override
   void initState() {
     // TODO: implement initState
+    dataClass=DataClass(firestoreService: firestoreService);
     tz.initializeTimeZones();
 
 // Get the local time zone
@@ -138,7 +141,8 @@ class _AddTaskState extends State<AddTask> {
             ElevatedButton(onPressed: ()async{
              DateTime? dateTime=await showDatePicker();
              print('dateTime=$dateTime');
-            }, child: Text('get dateTime')),
+             deadline=dateTime!;
+            }, child: Text('get deadline of your task')),
 
 
       ElevatedButton(
@@ -168,6 +172,7 @@ class _AddTaskState extends State<AddTask> {
               // If the current date is before the deadline, set a timer to schedule the notification when the deadline is reached
               Duration difference = deadline.difference(DateTime.now());
               Timer(difference, () async {
+
                 await AwesomeNotifications().createNotification(
                   content: NotificationContent(
                     id: UniqueKey().hashCode,
@@ -188,8 +193,9 @@ class _AddTaskState extends State<AddTask> {
       floatingActionButton:FloatingActionButton(
         onPressed: ()async{
 
-          Tache task=Tache(id:"",title:  taskName.text, completed: false,description: "",createdAt: DateTime.now(),categoryId:dropdownValue );
+          Tache task=Tache(id:"",title:  taskName.text, completed: false,description: "",createdAt: DateTime.now(),categoryId:dropdownValue ,deadline:deadline );
            context.read<DataClass>().addTask(task);
+          dataClass.sendNotif(task.deadline, task.completed);
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
 
         },

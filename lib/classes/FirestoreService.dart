@@ -23,7 +23,8 @@ class FirestoreService{
     'description':task.getDescription,
     'completed':task.isCompleted,
     'categorie':task.getCategoryId ,
-    'createdAt':task.getCreatedAt
+    'createdAt':task.getCreatedAt,
+      'deadline':task.deadline
     });
     print("task details being added: taskid=${task.getId}, taskTitle=${task.title}");
 
@@ -52,6 +53,7 @@ class FirestoreService{
       'description': task.getDescription,
       'completed': task.isCompleted,
       'categorie': task.getCategoryId,
+      'deadline':task.deadline
     });
   }
 

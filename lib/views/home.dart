@@ -72,6 +72,7 @@ class _HomePageState extends State<HomePage> {
                           Text("Categorie: ${task.categoryId}"),
                           Text("date: ${(task.createdAt)}"),
                           Text("completed: ${(task.isCompleted)}"),
+                        Text("completed: ${(task.deadline)}"),
                         IconButton(onPressed: ()async{
                           print("task id  to be deleted=${task.getId}");
                          await context.read<DataClass>().deleteTask(task.getId);
