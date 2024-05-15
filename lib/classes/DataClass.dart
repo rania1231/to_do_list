@@ -11,8 +11,12 @@ class DataClass extends ChangeNotifier{
   List<Tache> get tasks => _tasks;
 
   Future<void> addTask(Tache task)async{
+    print("1-length of _tasks=${_tasks.length}");
     await firestoreService.addTask(task);
-    _tasks.add(task);
+    print("2-length of _tasks=${_tasks.length}");
+    print("Data class: taskid=${task.getId}");
+
+    print("3-length of _tasks=${_tasks.length}");
     notifyListeners();
   }
 
@@ -37,8 +41,10 @@ class DataClass extends ChangeNotifier{
     notifyListeners();
   }
 
-  void subscribeToTasksStream() {
-    Stream<List<Tache>> tasksStream = firestoreService.getTasks();
+  Future<void> subscribeToTasksStream() async {
+    print("task here before initialize: tasks's length=${tasks.length}");
+    Stream<List<Tache>> tasksStream =await  firestoreService.getTasks();
+    print("taskStream length= ${tasksStream.length}");
     tasksStream.listen((tasks) {
       _tasks = tasks;
       notifyListeners();

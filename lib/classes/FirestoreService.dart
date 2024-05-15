@@ -18,12 +18,14 @@ class FirestoreService{
     final docRef=_db.collection('users').doc(_userId).collection('tasks').doc();
     task.setId((docRef.id).toString());
     await docRef.set({
+      'id':task.getId,
     'title':task.getTitle,
     'description':task.getDescription,
     'completed':task.isCompleted,
     'categorie':task.getCategoryId ,
     'createdAt':task.getCreatedAt
     });
+    print("task details being added: taskid=${task.getId}, taskTitle=${task.title}");
 
   }
 
@@ -61,10 +63,7 @@ class FirestoreService{
         .collection('tasks')
         .snapshots()
         .map((snapshot) {
-          print("le nombre de tasks =${_db
-              .collection('users')
-              .doc(_userId)
-              .collection('tasks').count()}");
+
       return snapshot.docs.map((doc) => Tache.fromFirestore(doc.data()!)).toList();
     });
   }

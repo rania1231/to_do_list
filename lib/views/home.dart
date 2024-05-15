@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/auth/login.dart';
+import 'package:to_do_list/views/addTask.dart';
 
 import '../classes/DataClass.dart';
 import '../classes/FirestoreService.dart';
@@ -17,9 +18,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-  final FirestoreService firestoreService = FirestoreService();
 
+  //final FirestoreService firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
     final tasks = Provider.of<DataClass>(context).tasks;
@@ -53,7 +53,8 @@ class _HomePageState extends State<HomePage> {
       }
 
 
-    )
+    ),
+      floatingActionButton:FloatingActionButton(child:Icon(CupertinoIcons.add),onPressed: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddTask()), (route) => false);},) ,
     );
 
 
