@@ -9,6 +9,8 @@ class DataClass extends ChangeNotifier{
     subscribeToTasksStream(); // Call to initiate stream subscription
   }
   List<Tache> get tasks => _tasks;
+  String currentCategory='Default';
+
 
   Future<void> addTask(Tache task)async{
     print("1-length of _tasks=${_tasks.length}");
@@ -49,6 +51,11 @@ class DataClass extends ChangeNotifier{
       _tasks = tasks;
       notifyListeners();
     });
+  }
+
+  void editCategory(String s) {
+    currentCategory=s;
+    notifyListeners();
   }
 
 }

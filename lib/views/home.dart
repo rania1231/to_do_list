@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/auth/login.dart';
 import 'package:to_do_list/views/addTask.dart';
+import 'package:to_do_list/views/updateTask.dart';
 
 import '../classes/DataClass.dart';
 import '../classes/FirestoreService.dart';
@@ -43,7 +44,11 @@ class _HomePageState extends State<HomePage> {
                     IconButton(onPressed: ()async{
                       print("task id  to be deleted=${task.getId}");
                      await context.read<DataClass>().deleteTask(task.getId);
-                    }, icon: const Icon(CupertinoIcons.delete))
+                    }, icon: const Icon(CupertinoIcons.delete)),
+                    IconButton(onPressed: ()async{
+                      print("task id  to be edited=${task.getId}");
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)), (route) => false);
+                    }, icon: const Icon(CupertinoIcons.pen))
                   ])
                 )
             );
