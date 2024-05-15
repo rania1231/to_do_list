@@ -78,7 +78,12 @@ class _HomePageState extends State<HomePage> {
                         checkColor: Colors.teal,),
                         Row(children:[
 
-                            Text("title: ${task.title}"),
+                          Text(
+                            "title: ${task.title}",
+                            style: TextStyle(
+                              decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+                            ),
+                          ),
                           IconButton(onPressed: ()async{
                             print("task id  to be deleted=${task.getId}");
                            await context.read<DataClass>().deleteTask(task.getId);
