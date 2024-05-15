@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:to_do_list/views/updateTask.dart';
 
 import '../classes/DataClass.dart';
 import '../classes/FirestoreService.dart';
+import '../classes/notification_controller.dart';
 import '../classes/task.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,6 +22,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  @override
+  void initState() {
+    AwesomeNotifications().setListeners(
+        onActionReceivedMethod:         NotificationController.onActionReceivedMethod,
+        onNotificationCreatedMethod:    NotificationController.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod:  NotificationController.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod:  NotificationController.onDismissActionReceivedMethod
+    );
+    super.initState();
+  }
   //final FirestoreService firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
@@ -59,7 +71,21 @@ class _HomePageState extends State<HomePage> {
 
 
     ),
-      floatingActionButton:FloatingActionButton(child:Icon(CupertinoIcons.add),onPressed: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddTask()), (route) => false);},) ,
+      floatingActionButton:FloatingActionButton(
+        onPressed: () {
+          AwesomeNotifications().createNotification(
+              content: NotificationContent(
+                  id: 1,
+                  channelKey: "basic_channel",
+                title: "Hello Rania",
+                body:"Yey I have local notifications"
+              )
+          );
+        },
+        child:Icon(Icons.notification_add),
+        // child:Icon(CupertinoIcons.add),
+        //onPressed: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddTask()), (route) => false);},
+      ) ,
     );
 
 

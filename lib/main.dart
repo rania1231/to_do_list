@@ -1,3 +1,5 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:awesome_notifications/i_awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,24 @@ void main()  async{
       )
   );
   FirebaseFirestore.instance.settings= const Settings(persistenceEnabled :true,);
+  await AwesomeNotifications().initialize(
+    null,
+    [
+      NotificationChannel(
+        channelGroupKey: "basic_channel_group",
+          channelKey: "basic_channel",
+          channelName: "Basic Notification",
+          channelDescription: "Test Notification channel"
+      )
+    ],
+    channelGroups: [
+      NotificationChannelGroup(channelGroupKey: "basic_channel_group", channelGroupName: "basic Group")
+    ]
+  );
+  bool isAllowedToSendNotification=await AwesomeNotifications().isNotificationAllowed();
+  if(!isAllowedToSendNotification){
+    AwesomeNotifications().requestPermissionToSendNotifications();
+  }
   runApp(const MyApp());
 }
 
