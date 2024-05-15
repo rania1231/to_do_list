@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/auth/login.dart';
 import 'package:to_do_list/views/addTask.dart';
+import 'package:to_do_list/views/taskDetails.dart';
 import 'package:to_do_list/views/updateTask.dart';
 
 import '../classes/DataClass.dart';
@@ -46,44 +47,43 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (context, index){
             final task = tasks[index];
             return Card(
-                child:Container(
-                  padding: const EdgeInsets.all(10),
-                  child:Row(
-                    children: [
-                      Checkbox(value: task.isCompleted, onChanged: (bool? value)async {
-                        if(task.completed==false){
-                          task.completed=true;
-                          value=true;
-
-                        }
-                        else{
-                          {
-                            task.completed=false;
+                child:GestureDetector(
+                  onTap: (){Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>TaskDetails(task: task)), (route) => false);},
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child:Row(
+                      children: [
+                        Checkbox(value: task.isCompleted, onChanged: (bool? value)async {
+                          if(task.completed==false){
+                            task.completed=true;
                             value=true;
 
                           }
-                        }
-                        await context.read<DataClass>().updateTask(task);
-                      },
-                      checkColor: Colors.teal,),
-                      Column(children:[
-                          Text("id:${task.getId}"),
-                          Text("title: ${task.title}"),
-                          Text("Categorie: ${task.categoryId}"),
-                          Text("date: ${(task.createdAt)}"),
-                          Text("completed: ${(task.isCompleted)}"),
-                        Text("completed: ${(task.deadline)}"),
-                        IconButton(onPressed: ()async{
-                          print("task id  to be deleted=${task.getId}");
-                         await context.read<DataClass>().deleteTask(task.getId);
-                        }, icon: const Icon(CupertinoIcons.delete)),
-                        IconButton(onPressed: ()async{
-                          print("task id  to be edited=${task.getId}");
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)), (route) => false);
-                        }, icon: const Icon(CupertinoIcons.pen))
-                      ]),
-                    ],
-                  )
+                          else{
+                            {
+                              task.completed=false;
+                              value=true;
+
+                            }
+                          }
+                          await context.read<DataClass>().updateTask(task);
+                        },
+                        checkColor: Colors.teal,),
+                        Row(children:[
+
+                            Text("title: ${task.title}"),
+                          IconButton(onPressed: ()async{
+                            print("task id  to be deleted=${task.getId}");
+                           await context.read<DataClass>().deleteTask(task.getId);
+                          }, icon: const Icon(CupertinoIcons.delete)),
+                          IconButton(onPressed: ()async{
+                            print("task id  to be edited=${task.getId}");
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)), (route) => false);
+                          }, icon: const Icon(CupertinoIcons.pen))
+                        ]),
+                      ],
+                    )
+                  ),
                 )
             );
             }
