@@ -27,7 +27,7 @@ class Menu extends StatelessWidget {
         height: 450,
         width: 250
       ),
-      child: Icon(Icons.menu),
+      child: Icon(Icons.menu,color: Colors.white,size: 40,),
     );
   }
   Widget buildMenuItem(BuildContext context, String category) {

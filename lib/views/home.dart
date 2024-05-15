@@ -1,132 +1,109 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_list/auth/login.dart';
+import 'package:to_do_list/classes/DataClass.dart';
 import 'package:to_do_list/views/addTask.dart';
 import 'package:to_do_list/views/taskDetails.dart';
 import 'package:to_do_list/views/updateTask.dart';
-
-import '../classes/DataClass.dart';
-import '../classes/FirestoreService.dart';
-import '../classes/notification_controller.dart';
-import '../classes/task.dart';
 import 'menu.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
-  @override
-  void initState() {
-    AwesomeNotifications().setListeners(
-        onActionReceivedMethod:         NotificationController.onActionReceivedMethod,
-        onNotificationCreatedMethod:    NotificationController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:  NotificationController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:  NotificationController.onDismissActionReceivedMethod
-    );
-    super.initState();
-  }
- // late final Function(bool?)?onChanged;
-  //final FirestoreService firestoreService = FirestoreService();
   @override
   Widget build(BuildContext context) {
     final tasks = Provider.of<DataClass>(context).tasks;
+
     return Scaffold(
-      appBar: AppBar(title:  Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Home Page'),
-          Menu()
+      appBar: AppBar(
+        title: Text('Home Page'),
+        backgroundColor: Color(0xFFDEABAF),
+        actions: [
+          Menu(),
         ],
-      ),),
-      body: Consumer<DataClass>(builder :(context, dataClass ,child){
+      ),
+      body: Container(
 
-          return ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context, index){
+        color: Colors.grey[200],
+        child: ListView.builder(
+          itemCount: tasks.length,
+          itemBuilder: (context, index) {
             final task = tasks[index];
-            return Card(
-                child:GestureDetector(
-                  onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskDetails(task: task)), );},
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    child:Row(
+            return Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TaskDetails(task: task)),
+                  );
+                },
+                child: Card(
+                  margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: ListTile(
+                    leading: Checkbox(
+                      value: task.isCompleted,
+                      onChanged: (bool? value) async {
+                        if (task.completed == false) {
+                          task.completed = true;
+                        } else {
+                          task.completed = false;
+                        }
+                        await context.read<DataClass>().updateTask(task);
+                      },
+                      checkColor: Colors.white,
+                      activeColor: Color(0xFFDC98BD),
+                    ),
+                    title: Text(
+                      task.title,
+                      style: TextStyle(
+                        decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
+                      ),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Checkbox(value: task.isCompleted, onChanged: (bool? value)async {
-                          if(task.completed==false){
-                            task.completed=true;
-                            value=true;
+                        IconButton(
+                          onPressed: () async {
+                            await context.read<DataClass>().deleteTask(task.getId);
+                          },
+                          icon: Icon(Icons.delete),
+                          color: Color(0xFF211A44),
 
-                          }
-                          else{
-                            {
-                              task.completed=false;
-                              value=true;
-
-                            }
-                          }
-                          await context.read<DataClass>().updateTask(task);
-                        },
-                        checkColor: Colors.teal,),
-                        Row(children:[
-
-                          Text(
-                            "title: ${task.title}",
-                            style: TextStyle(
-                              decoration: task.isCompleted ? TextDecoration.lineThrough : TextDecoration.none,
-                            ),
-                          ),
-                          IconButton(onPressed: ()async{
-                            print("task id  to be deleted=${task.getId}");
-                           await context.read<DataClass>().deleteTask(task.getId);
-                          }, icon: const Icon(CupertinoIcons.delete)),
-                          IconButton(onPressed: ()async{
-                            print("task id  to be edited=${task.getId}");
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>UpdateTask(task: task)));
-                          }, icon: const Icon(CupertinoIcons.pen))
-                        ]),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => UpdateTask(task: task)),
+                            );
+                          },
+                          icon: Icon(Icons.edit),
+                          color: Color(0xFFDEABAF),
+                        ),
                       ],
-                    )
+                    ),
                   ),
-                )
+                ),
+              ),
             );
-            }
-
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddTask()),
           );
-      }
-
-
-    ),
-       floatingActionButton:FloatingActionButton(
-      //   onPressed: () {
-      //     AwesomeNotifications().createNotification(
-      //         content: NotificationContent(
-      //             id: 1,
-      //             channelKey: "basic_channel",
-      //           title: "Hello Rania",
-      //           body:"Yey I have local notifications"
-      //         )
-      //     );
-      //   },
-       // child:Icon(Icons.notification_add),
-         child:Icon(CupertinoIcons.add),
-        onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>AddTask()));},
-      ) ,
+        },
+        backgroundColor: Color(0xFFDEABAF),
+        child: Icon(Icons.add),
+      ),
     );
-
-
   }
-
-
-
-
-
 }
