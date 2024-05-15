@@ -125,16 +125,32 @@ class _LoginState extends State<Login> {
     String userPassword = password.text;
 
     try {
-      UserCredential userCredential = (await _auth.signInWithEmailAndPassword(userEmail, userPassword)) as UserCredential;
-      User? user = userCredential.user;
-      if (user != null) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
-        print("User logged in successfully");
-      } else {
-        print("Error: User is null");
+      final userCredential = await signInWithEmailAndPassword(userEmail, userPassword);
+      if (userCredential != null) {
+        // Navigate to your home page or handle successful sign-in
+        print('Signed in successfully!');
       }
     } catch (e) {
       print("Error signing in: $e");
     }
+  }
+  Future<UserCredential?> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final UserCredential userCredential = await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      } else {
+        print(e.code); // Print other errors
+      }
+    }
+    return null;
   }
 }

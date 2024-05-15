@@ -10,8 +10,8 @@ class DataClass extends ChangeNotifier{
   }
   List<Tache> get tasks => _tasks;
 
-  void addTask(Tache task){
-    firestoreService.addTask(task);
+  Future<void> addTask(Tache task)async{
+    await firestoreService.addTask(task);
     _tasks.add(task);
     notifyListeners();
   }

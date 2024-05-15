@@ -56,12 +56,12 @@ class Tache {
   });
 
   factory Tache.fromFirestore(Map<String, dynamic> data) => Tache(
-    title: data['title'] as String,
-    description: data['description'] as String,
-    completed: data['completed'] as bool,
-    categoryId: data['categorie'] as String,
-    createdAt: data['createdAt'] as Timestamp,
-    id: data['id'] as String,
+    title: data['title'],
+    description: data['description'] ,
+    completed: data['completed'] ,
+    categoryId: data['categorie'] ,
+    createdAt: data['createdAt'] ,
+    id: data['id'] ,
   );
 
 

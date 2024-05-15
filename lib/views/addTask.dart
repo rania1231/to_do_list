@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/classes/FirestoreService.dart';
+import 'package:to_do_list/views/home.dart';
 
 import '../classes/DataClass.dart';
 import '../classes/task.dart';
@@ -120,8 +121,10 @@ class _AddTaskState extends State<AddTask> {
       ),
       floatingActionButton:FloatingActionButton(
         onPressed: ()async{
+
           Tache task=Tache(id:"",title:  taskName.text, completed: false,description: "",createdAt: Timestamp.now(),categoryId:dropdownValue );
-          context.read<DataClass>().addTask(task);
+           context.read<DataClass>().addTask(task);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
 
         },
         child: Icon(CupertinoIcons.check_mark),

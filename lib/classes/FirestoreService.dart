@@ -29,6 +29,7 @@ class FirestoreService{
 
   // Delete task method
   Future<void> deleteTask(String taskId) async {
+
     await _db
         .collection('users')
         .doc(_userId)
@@ -60,6 +61,10 @@ class FirestoreService{
         .collection('tasks')
         .snapshots()
         .map((snapshot) {
+          print("le nombre de tasks =${_db
+              .collection('users')
+              .doc(_userId)
+              .collection('tasks').count()}");
       return snapshot.docs.map((doc) => Tache.fromFirestore(doc.data()!)).toList();
     });
   }
